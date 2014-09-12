@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_curvefitter" default="compile.module.curvefitter">
+  <dirname property="module.curvefitter.basedir" file="${ant.file.module_curvefitter}"/>
+  
+  <property name="module.jdk.home.curvefitter" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.curvefitter" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.curvefitter" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.curvefitter" value="-encoding UTF-8 -source 1.6 ${compiler.args}"/>
+  
+  <property name="curvefitter.output.dir" value="${module.curvefitter.basedir}/out/production/CurveFitter"/>
+  <property name="curvefitter.testoutput.dir" value="${module.curvefitter.basedir}/out/test/CurveFitter"/>
+  
+  <path id="curvefitter.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="curvefitter.module.production.classpath">
+    <path refid="${module.jdk.classpath.curvefitter}"/>
+    <pathelement location="${basedir}/../../Downloads/Jama-1.0.3.jar"/>
+  </path>
+  
+  <path id="curvefitter.runtime.production.module.classpath">
+    <pathelement location="${curvefitter.output.dir}"/>
+    <pathelement location="${basedir}/../../Downloads/Jama-1.0.3.jar"/>
+  </path>
+  
+  <path id="curvefitter.module.classpath">
+    <path refid="${module.jdk.classpath.curvefitter}"/>
+    <pathelement location="${curvefitter.output.dir}"/>
+    <pathelement location="${basedir}/../../Downloads/Jama-1.0.3.jar"/>
+  </path>
+  
+  <path id="curvefitter.runtime.module.classpath">
+    <pathelement location="${curvefitter.testoutput.dir}"/>
+    <pathelement location="${curvefitter.output.dir}"/>
+    <pathelement location="${basedir}/../../Downloads/Jama-1.0.3.jar"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.curvefitter">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.curvefitter">
+    <patternset refid="excluded.from.module.curvefitter"/>
+  </patternset>
+  
+  <path id="curvefitter.module.sourcepath">
+    <dirset dir="${module.curvefitter.basedir}">
+      <include name="src"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.curvefitter" depends="compile.module.curvefitter.production,compile.module.curvefitter.tests" description="Compile module io.binroot.regression.CurveFitter"/>
+  
+  <target name="compile.module.curvefitter.production" depends="register.custom.compilers" description="Compile module io.binroot.regression.CurveFitter; production classes">
+    <mkdir dir="${curvefitter.output.dir}"/>
+    <javac2 destdir="${curvefitter.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.curvefitter}/javac">
+      <compilerarg line="${compiler.args.curvefitter}"/>
+      <bootclasspath refid="curvefitter.module.bootclasspath"/>
+      <classpath refid="curvefitter.module.production.classpath"/>
+      <src refid="curvefitter.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.curvefitter"/>
+    </javac2>
+    
+    <copy todir="${curvefitter.output.dir}">
+      <fileset dir="${module.curvefitter.basedir}/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.curvefitter.tests" depends="register.custom.compilers,compile.module.curvefitter.production" description="compile module io.binroot.regression.CurveFitter; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.curvefitter" description="cleanup module">
+    <delete dir="${curvefitter.output.dir}"/>
+    <delete dir="${curvefitter.testoutput.dir}"/>
+  </target>
+</project>
